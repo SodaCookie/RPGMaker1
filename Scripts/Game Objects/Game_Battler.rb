@@ -84,6 +84,8 @@ class Game_Battler < Game_BattlerBase
       add_new_state(state_id) unless state?(state_id)
       reset_state_counts(state_id)
       @result.added_states.push(state_id).uniq!
+      print "add_state "
+      puts state_id
     end
   end
   #--------------------------------------------------------------------------

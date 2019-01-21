@@ -9,7 +9,7 @@ module Variables
     6 => Game_ClassAttribute.new(1, 2),
     7 => Game_ClassAttribute.new(1, 2),
     8 => Game_ClassAttribute.new(1, 2),
-    9 => Game_ClassAttribute.new(1, 2),
+    9 => Game_ClassAttribute.new(129, 130),
     10 => Game_ClassAttribute.new(1, 2),
   }
 
