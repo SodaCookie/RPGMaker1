@@ -24,6 +24,7 @@ class Spriteset_Battle
   # * Create Viewport
   #--------------------------------------------------------------------------
   def create_viewports
+    @camera_zoom = 1.0
     @viewport1 = Viewport.new
     @viewport2 = Viewport.new
     @viewport3 = Viewport.new
@@ -409,9 +410,29 @@ class Spriteset_Battle
   #--------------------------------------------------------------------------
   # * Moves the viewport of the enemy fighters
   #--------------------------------------------------------------------------
-  def set_battler_position(x, y)
+  def set_camera_position(x, y)
     @viewport_battler.rect.x = x
     @viewport_battler.rect.y = y
+  end
+  #--------------------------------------------------------------------------
+  # * sets the zoom of the sprites
+  #--------------------------------------------------------------------------
+  def camera_zoom
+    @camera_zoom
+  end
+  #--------------------------------------------------------------------------
+  # * sets the zoom of the sprites
+  #--------------------------------------------------------------------------
+  def set_camera_zoom(value)
+    @camera_zoom = value
+    @back1_sprite.zoom_x = value
+    @back1_sprite.zoom_y = value
+    @back2_sprite.zoom_x = value
+    @back2_sprite.zoom_y = value
+    @enemy_sprites.each do |sprite|
+      sprite.zoom_x = value
+      sprite.zoom_y = value
+    end
   end
   #--------------------------------------------------------------------------
   # * Moves the viewport of the enemy fighters
@@ -424,18 +445,12 @@ class Spriteset_Battle
       target_y = @focused_sprite.y - (@viewport_battler.rect.height / 2)
       new_x = -target_x * 0.1 + cur_x * 0.9
       new_y = -target_y * 0.1 + cur_y * 0.9
-      @enemy_sprites.each do |sprite|
-        sprite.zoom_x = 1.1 * 0.1 + sprite.zoom_x * 0.9
-        sprite.zoom_y = 1.1 * 0.1 + sprite.zoom_y * 0.9
-      end
+      set_camera_zoom(1.1 * 0.1 + camera_zoom * 0.9)
     else
       new_x = cur_x * 0.9
       new_y = cur_y * 0.9
-      @enemy_sprites.each do |sprite|
-        sprite.zoom_x = 1.0 * 0.1 + sprite.zoom_x * 0.9
-        sprite.zoom_y = 1.0 * 0.1 + sprite.zoom_y * 0.9
-      end
+      set_camera_zoom(1.0 * 0.1 + camera_zoom * 0.9)
     end
-    set_battler_position(new_x, new_y)
+    set_camera_position(new_x, new_y)
   end
 end

@@ -37,7 +37,7 @@ class Window_SkillCommand < Window_Command
   # * Get Number of Lines to Show
   #--------------------------------------------------------------------------
   def visible_line_number
-    return 4
+    return 6
   end
   #--------------------------------------------------------------------------
   # * Create Command List

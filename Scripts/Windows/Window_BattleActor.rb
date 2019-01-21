@@ -36,4 +36,30 @@ class Window_BattleActor < Window_BattleStatus
     @info_viewport.rect.width = Graphics.width if @info_viewport
     super
   end
+  #--------------------------------------------------------------------------
+  # * Move Cursor Down
+  #--------------------------------------------------------------------------
+  def cursor_down(wrap = false)
+  end
+  #--------------------------------------------------------------------------
+  # * Move Cursor Up
+  #--------------------------------------------------------------------------
+  def cursor_up(wrap = false)
+  end
+  #--------------------------------------------------------------------------
+  # * Move Cursor Right
+  #--------------------------------------------------------------------------
+  def cursor_right(wrap = false)
+    if index < item_max - col_max || (wrap && col_max == 1)
+      select((index + col_max) % item_max)
+    end
+  end
+  #--------------------------------------------------------------------------
+  # * Move Cursor Left
+  #--------------------------------------------------------------------------
+  def cursor_left(wrap = false)
+    if index >= col_max || (wrap && col_max == 1)
+      select((index - col_max + item_max) % item_max)
+    end
+  end
 end

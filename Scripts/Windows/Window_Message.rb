@@ -51,7 +51,7 @@ class Window_Message < Window_Base
   # * Get Number of Lines to Show
   #--------------------------------------------------------------------------
   def visible_line_number
-    return 4
+    return 6
   end
   #--------------------------------------------------------------------------
   # * Free
@@ -248,7 +248,7 @@ class Window_Message < Window_Base
     @number_window.close? && @item_window.close?
   end
   #--------------------------------------------------------------------------
-  # * Determine Whether to Continue Displaying Text 
+  # * Determine Whether to Continue Displaying Text
   #--------------------------------------------------------------------------
   def text_continue?
     $game_message.has_text? && !settings_changed?

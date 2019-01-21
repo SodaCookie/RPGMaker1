@@ -106,8 +106,8 @@ class Sprite_Battler < Sprite_Base
   # * Update Position
   #--------------------------------------------------------------------------
   def update_position
-    self.x = @battler.screen_x
-    self.y = @battler.screen_y
+    self.x = (@battler.screen_x / 544.0) * Graphics.width
+    self.y = (@battler.screen_y / 480.0) * Graphics.height
     self.z = @battler.screen_z
   end
   #--------------------------------------------------------------------------

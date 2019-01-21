@@ -31,7 +31,7 @@ class Window_BattleStatus < Window_Selectable
   # * Get Number of Lines to Show
   #--------------------------------------------------------------------------
   def visible_line_number
-    return 4
+    return 6
   end
   #--------------------------------------------------------------------------
   # * Get Number of Items
@@ -58,17 +58,22 @@ class Window_BattleStatus < Window_Selectable
   # * Get Basic Area Retangle
   #--------------------------------------------------------------------------
   def basic_area_rect(index)
-    rect = item_rect_for_text(index)
-    rect.width -= gauge_area_width + 10
+    rect = Rect.new
+    rect.x = window_width / 4 * index
+    rect.y = 0
+    rect.width = window_width / 4
+    rect.height = window_height
     rect
   end
   #--------------------------------------------------------------------------
   # * Get Gauge Area Rectangle
   #--------------------------------------------------------------------------
   def gauge_area_rect(index)
-    rect = item_rect_for_text(index)
-    rect.x += rect.width - gauge_area_width
-    rect.width = gauge_area_width
+    rect = basic_area_rect(index)
+    rect.x += 4
+    rect.y += 92
+    rect.width -= 16
+    rect.height -= 100
     rect
   end
   #--------------------------------------------------------------------------
@@ -81,8 +86,9 @@ class Window_BattleStatus < Window_Selectable
   # * Draw Basic Area
   #--------------------------------------------------------------------------
   def draw_basic_area(rect, actor)
-    draw_actor_name(actor, rect.x + 0, rect.y, 100)
-    draw_actor_icons(actor, rect.x + 104, rect.y, rect.width - 104)
+    draw_actor_face(actor, rect.x + (rect.width / 2 - 96 / 2), rect.y + 4)
+    draw_actor_name(actor, rect.x + 4, rect.y + 4, 100)
+    draw_actor_icons(actor, rect.x + 104, rect.y, rect.width)
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area
@@ -98,15 +104,33 @@ class Window_BattleStatus < Window_Selectable
   # * Draw Gauge Area (with TP)
   #--------------------------------------------------------------------------
   def draw_gauge_area_with_tp(rect, actor)
-    draw_actor_hp(actor, rect.x + 0, rect.y, 72)
-    draw_actor_mp(actor, rect.x + 82, rect.y, 64)
-    draw_actor_tp(actor, rect.x + 156, rect.y, 64)
+    draw_actor_hp(actor, rect.x, rect.y, rect.width)
+    draw_actor_mp(actor, rect.x, rect.y + 24, rect.width)
+    draw_actor_tp(actor, rect.x, rect.y + 48, rect.width)
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area (without TP)
   #--------------------------------------------------------------------------
   def draw_gauge_area_without_tp(rect, actor)
-    draw_actor_hp(actor, rect.x + 0, rect.y, 134)
-    draw_actor_mp(actor, rect.x + 144,  rect.y, 76)
+    draw_actor_hp(actor, rect.x, rect.y, rect.width)
+    draw_actor_mp(actor, rect.x, rect.y + 24, rect.width)
+  end
+  #--------------------------------------------------------------------------
+  # * Update Cursor
+  #--------------------------------------------------------------------------
+  def update_cursor
+    if @cursor_all
+      cursor_rect.set(basic_area_rect(@index))
+      cursor_rect.width -= 8
+      cursor_rect.height -= 24
+      self.top_row = 0
+    elsif @index < 0
+      cursor_rect.empty
+    else
+      ensure_cursor_visible
+      cursor_rect.set(basic_area_rect(@index))
+      cursor_rect.width -= 8
+      cursor_rect.height -= 24
+    end
   end
 end

@@ -6,6 +6,13 @@
 #==============================================================================
 module StateManager
 
+  SOUL = "SOUL"
+  BODY = "BODY"
+
+  LIGHT = 0
+  STRONG = 1
+  SEVERE = 2
+
   @types = ["BODY", "SOUL"]
   @slices = {}
 
@@ -54,11 +61,13 @@ module StateManager
   end
 
   def self.remove_light_soul_afflictions
+    self.remove_state_afflictions(StateManager::SOUL, StateManager::LIGHT)
+  end
+
+  def self.remove_state_afflictions(type, level)
     to_remove = []
-    puts "RUNNING"
-    puts $game_variables[1].states.length
     $game_variables[1].states.each do |state|
-      if state.priority <= 0 && self.is_type(state.id, "SOUL")
+      if state.priority <= level && self.is_type?(state.id, type)
         to_remove.push(state.id)
       end
     end

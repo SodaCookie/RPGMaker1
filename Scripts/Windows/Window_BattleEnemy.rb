@@ -12,7 +12,7 @@ class Window_BattleEnemy < Window_Selectable
   #     info_viewport : Viewport for displaying information
   #--------------------------------------------------------------------------
   def initialize(info_viewport, battler_spriteset)
-    super(0, info_viewport.rect.y, window_width, fitting_height(4))
+    super(0, info_viewport.rect.y, window_width, fitting_height(6))
     refresh
     self.visible = false
     @info_viewport = info_viewport
