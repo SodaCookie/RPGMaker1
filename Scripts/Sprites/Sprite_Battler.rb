@@ -17,6 +17,8 @@ class Sprite_Battler < Sprite_Base
   def initialize(viewport, battler = nil)
     super(viewport)
     @battler = battler
+    @base_bitmap = nil
+    @state_bitmap = nil
     @battler_visible = false
     @effect_type = nil
     @effect_duration = 0
@@ -26,6 +28,8 @@ class Sprite_Battler < Sprite_Base
   #--------------------------------------------------------------------------
   def dispose
     bitmap.dispose if bitmap
+    @base_bitmap.dispose if @base_bitmap
+    @state_bitmap.dispose if @state_bitmap
     super
   end
   #--------------------------------------------------------------------------
@@ -37,6 +41,7 @@ class Sprite_Battler < Sprite_Base
       @use_sprite = @battler.use_sprite?
       if @use_sprite
         update_bitmap
+        update_status_effects
         update_origin
         update_position
       end
@@ -49,14 +54,37 @@ class Sprite_Battler < Sprite_Base
     end
   end
   #--------------------------------------------------------------------------
+  # * Update Status Effects
+  #--------------------------------------------------------------------------
+  def update_status_effects
+    bitmap = Cache.system("Iconset")
+    @state_bitmap.clear
+    icon_indexs = @battler.state_icons
+    max_icons_per_row = @state_bitmap.width / 24
+    icon_indexs.each_with_index do |icon_index, i|
+      rect = Rect.new(icon_index % 16 * 24, icon_index / 16 * 24, 24, 24)
+      if icon_indexs.length < max_icons_per_row
+        @state_bitmap.blt((i % max_icons_per_row) * 24, 0, bitmap, rect, 255)
+      else
+        @state_bitmap.blt(
+          i * @state_bitmap.width / icon_indexs.length, 0, bitmap, rect, 255)
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
   # * Update Transfer Origin Bitmap
   #--------------------------------------------------------------------------
   def update_bitmap
     new_bitmap = Cache.battler(@battler.battler_name, @battler.battler_hue)
-    if bitmap != new_bitmap
-      self.bitmap = new_bitmap
+    if @base_bitmap != new_bitmap
+      @base_bitmap = new_bitmap
+      @state_bitmap = Bitmap.new(@base_bitmap.width, @base_bitmap.height)
+      self.bitmap = Bitmap.new(@base_bitmap.width, @base_bitmap.height)
       init_visibility
     end
+    self.bitmap.clear
+    self.bitmap.blt(0, 0, @base_bitmap, @base_bitmap.rect)
+    self.bitmap.blt(0, 0, @state_bitmap, @state_bitmap.rect)
   end
   #--------------------------------------------------------------------------
   # * Initialize Visibility

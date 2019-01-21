@@ -1,8 +1,8 @@
 module Variables
 
   ClassAttributes = {
-    1 => Game_ClassAttribute.new(1, 2),
-    2 => Game_ClassAttribute.new(2, 3),
+    1 => Game_ClassAttribute.new(128, 2),
+    2 => Game_ClassAttribute.new(2, 1),
     3 => Game_ClassAttribute.new(1, 2),
     4 => Game_ClassAttribute.new(1, 2),
     5 => Game_ClassAttribute.new(1, 2),

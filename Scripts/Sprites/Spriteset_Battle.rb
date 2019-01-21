@@ -27,6 +27,7 @@ class Spriteset_Battle
     @viewport1 = Viewport.new
     @viewport2 = Viewport.new
     @viewport3 = Viewport.new
+    @viewport_battler = Viewport.new
     @viewport2.z = 50
     @viewport3.z = 100
   end
@@ -219,8 +220,9 @@ class Spriteset_Battle
   # * Create Enemy Sprite
   #--------------------------------------------------------------------------
   def create_enemies
+    @focused_sprite = nil
     @enemy_sprites = $game_troop.members.reverse.collect do |enemy|
-      Sprite_Battler.new(@viewport1, enemy)
+      Sprite_Battler.new(@viewport_battler, enemy)
     end
   end
   #--------------------------------------------------------------------------
@@ -302,6 +304,7 @@ class Spriteset_Battle
     @viewport1.dispose
     @viewport2.dispose
     @viewport3.dispose
+    @viewport_battler.dispose
   end
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -368,6 +371,8 @@ class Spriteset_Battle
     @viewport1.update
     @viewport2.update
     @viewport3.update
+    @viewport_battler.update
+    update_battler_position
   end
   #--------------------------------------------------------------------------
   # * Get Enemy and Actor Sprites
@@ -386,5 +391,51 @@ class Spriteset_Battle
   #--------------------------------------------------------------------------
   def effect?
     battler_sprites.any? {|sprite| sprite.effect? }
+  end
+  #--------------------------------------------------------------------------
+  # * Sets the focus of the fighter by index
+  #--------------------------------------------------------------------------
+  def set_focused_sprite_index(index)
+    if index == nil
+      @focused_sprite = nil
+    else
+      # Filter based on death
+      filtered_sprites = @enemy_sprites.select do |enemy|
+        enemy.battler.alive?
+      end
+      @focused_sprite = filtered_sprites[filtered_sprites.length - index - 1]
+    end
+  end
+  #--------------------------------------------------------------------------
+  # * Moves the viewport of the enemy fighters
+  #--------------------------------------------------------------------------
+  def set_battler_position(x, y)
+    @viewport_battler.rect.x = x
+    @viewport_battler.rect.y = y
+  end
+  #--------------------------------------------------------------------------
+  # * Moves the viewport of the enemy fighters
+  #--------------------------------------------------------------------------
+  def update_battler_position
+    cur_x = @viewport_battler.rect.x
+    cur_y = @viewport_battler.rect.y
+    if @focused_sprite
+      target_x = @focused_sprite.x - (@viewport_battler.rect.width / 2)
+      target_y = @focused_sprite.y - (@viewport_battler.rect.height / 2)
+      new_x = -target_x * 0.1 + cur_x * 0.9
+      new_y = -target_y * 0.1 + cur_y * 0.9
+      @enemy_sprites.each do |sprite|
+        sprite.zoom_x = 1.1 * 0.1 + sprite.zoom_x * 0.9
+        sprite.zoom_y = 1.1 * 0.1 + sprite.zoom_y * 0.9
+      end
+    else
+      new_x = cur_x * 0.9
+      new_y = cur_y * 0.9
+      @enemy_sprites.each do |sprite|
+        sprite.zoom_x = 1.0 * 0.1 + sprite.zoom_x * 0.9
+        sprite.zoom_y = 1.0 * 0.1 + sprite.zoom_y * 0.9
+      end
+    end
+    set_battler_position(new_x, new_y)
   end
 end

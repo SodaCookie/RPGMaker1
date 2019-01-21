@@ -11,11 +11,12 @@ class Window_BattleEnemy < Window_Selectable
   # * Object Initialization
   #     info_viewport : Viewport for displaying information
   #--------------------------------------------------------------------------
-  def initialize(info_viewport)
+  def initialize(info_viewport, battler_spriteset)
     super(0, info_viewport.rect.y, window_width, fitting_height(4))
     refresh
     self.visible = false
     @info_viewport = info_viewport
+    @battler_spriteset = battler_spriteset
   end
   #--------------------------------------------------------------------------
   # * Get Window Width
@@ -59,6 +60,7 @@ class Window_BattleEnemy < Window_Selectable
       @info_viewport.rect.width = width_remain
       select(0)
     end
+    @battler_spriteset.set_focused_sprite_index(@index)
     super
   end
   #--------------------------------------------------------------------------
@@ -66,6 +68,16 @@ class Window_BattleEnemy < Window_Selectable
   #--------------------------------------------------------------------------
   def hide
     @info_viewport.rect.width = Graphics.width if @info_viewport
+    @battler_spriteset.set_focused_sprite_index(nil)
     super
+  end
+  #--------------------------------------------------------------------------
+  # * Frame Update
+  #--------------------------------------------------------------------------
+  def update
+    super
+    if self.visible
+      @battler_spriteset.set_focused_sprite_index(@index)
+    end
   end
 end

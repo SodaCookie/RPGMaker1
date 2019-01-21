@@ -265,7 +265,7 @@ class Scene_Battle < Scene_Base
   # * Create Enemy Window
   #--------------------------------------------------------------------------
   def create_enemy_window
-    @enemy_window = Window_BattleEnemy.new(@info_viewport)
+    @enemy_window = Window_BattleEnemy.new(@info_viewport, @spriteset)
     @enemy_window.set_handler(:ok,     method(:on_enemy_ok))
     @enemy_window.set_handler(:cancel, method(:on_enemy_cancel))
   end
