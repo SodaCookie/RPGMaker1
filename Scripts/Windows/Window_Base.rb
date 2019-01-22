@@ -375,6 +375,16 @@ class Window_Base < Window
     contents.blt(x, y, bitmap, rect, enabled ? 255 : translucent_alpha)
   end
   #--------------------------------------------------------------------------
+  # * Draw half size Icon
+  #     enabled : Enabled flag. When false, draw semi-transparently.
+  #--------------------------------------------------------------------------
+  def draw_small_icon(icon_index, x, y, enabled = true)
+    bitmap = Cache.system("Iconset")
+    rect = Rect.new(icon_index % 16 * 24, icon_index / 16 * 24, 24, 24)
+    target = Rect.new(x, y, 12, 12)
+    contents.stretch_blt(target, bitmap, rect)
+  end
+  #--------------------------------------------------------------------------
   # * Draw Face Graphic
   #     enabled : Enabled flag. When false, draw semi-transparently.
   #--------------------------------------------------------------------------
@@ -469,8 +479,13 @@ class Window_Base < Window
   # * Draw State and Buff/Debuff Icons
   #--------------------------------------------------------------------------
   def draw_actor_icons(actor, x, y, width = 96)
-    icons = (actor.state_icons + actor.buff_icons)[0, width / 24]
-    icons.each_with_index {|n, i| draw_icon(n, x + 24 * i, y) }
+    max_icons_per_row = width / 12
+    icons = (actor.state_icons + actor.buff_icons)
+    if icons.length < max_icons_per_row
+      icons.each_with_index {|n, i| draw_small_icon(n, x + 12 * i, y) }
+    else
+      icons.each_with_index {|n, i| draw_small_icon(n, x + (width / icons.length) * i, y) }
+    end
   end
   #--------------------------------------------------------------------------
   # * Draw Current Value/Maximum Value in Fractional Format

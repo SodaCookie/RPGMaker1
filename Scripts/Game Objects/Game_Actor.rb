@@ -233,7 +233,7 @@ class Game_Actor < Game_Battler
     @equips[slot_id].object = nil if slot_id
   end
   #--------------------------------------------------------------------------
-  # * Remove Equipment that Cannot Be Equipped 
+  # * Remove Equipment that Cannot Be Equipped
   #     item_gain:  Return removed equipment to party.
   #--------------------------------------------------------------------------
   def release_unequippable_items(item_gain = true)
@@ -517,6 +517,12 @@ class Game_Actor < Game_Battler
     @character_name = character_name
     @character_index = character_index
     @face_name = face_name
+    @face_index = face_index
+  end
+  #--------------------------------------------------------------------------
+  # * Change the face index
+  #--------------------------------------------------------------------------
+  def set_face_index(face_index)
     @face_index = face_index
   end
   #--------------------------------------------------------------------------

@@ -217,7 +217,12 @@ class Window_BattleLog < Window_Selectable
   #--------------------------------------------------------------------------
   def display_use_item(subject, item)
     if item.is_a?(RPG::Skill)
-      add_text(subject.name + item.message1)
+      if item.for_one?
+        target = subject.current_action.make_targets[0]
+        add_text(subject.name + item.message1.gsub("%target%", target.name))
+      else
+        add_text(subject.name + item.message1)
+      end
       unless item.message2.empty?
         wait
         add_text(item.message2)

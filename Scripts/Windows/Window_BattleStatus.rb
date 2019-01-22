@@ -71,7 +71,7 @@ class Window_BattleStatus < Window_Selectable
   def gauge_area_rect(index)
     rect = basic_area_rect(index)
     rect.x += 4
-    rect.y += 92
+    rect.y += 82
     rect.width -= 16
     rect.height -= 100
     rect
@@ -86,9 +86,17 @@ class Window_BattleStatus < Window_Selectable
   # * Draw Basic Area
   #--------------------------------------------------------------------------
   def draw_basic_area(rect, actor)
-    draw_actor_face(actor, rect.x + (rect.width / 2 - 96 / 2), rect.y + 4)
-    draw_actor_name(actor, rect.x + 4, rect.y + 4, 100)
-    draw_actor_icons(actor, rect.x + 104, rect.y, rect.width)
+    prev_face_index = actor.face_index
+    if actor.hp == 0
+      actor.set_face_index(actor.face_index - 1)
+    elsif actor.hp < actor.mhp / 4
+      actor.set_face_index(actor.face_index - 1)
+    else
+      actor.set_face_index(actor.face_index)
+    end
+    draw_actor_face(actor, rect.x + (rect.width / 2 - 96 / 2), rect.y + 2)
+    draw_actor_name(actor, rect.x + 4, rect.y + 2, 100)
+    actor.set_face_index(prev_face_index)
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area
@@ -99,6 +107,7 @@ class Window_BattleStatus < Window_Selectable
     else
       draw_gauge_area_without_tp(rect, actor)
     end
+    draw_actor_icons(actor, rect.x, rect.y + 48, rect.width)
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area (with TP)
@@ -113,7 +122,7 @@ class Window_BattleStatus < Window_Selectable
   #--------------------------------------------------------------------------
   def draw_gauge_area_without_tp(rect, actor)
     draw_actor_hp(actor, rect.x, rect.y, rect.width)
-    draw_actor_mp(actor, rect.x, rect.y + 24, rect.width)
+    draw_actor_mp(actor, rect.x, rect.y + 20, rect.width)
   end
   #--------------------------------------------------------------------------
   # * Update Cursor
