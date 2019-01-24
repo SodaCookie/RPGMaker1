@@ -378,10 +378,10 @@ class Window_Base < Window
   # * Draw half size Icon
   #     enabled : Enabled flag. When false, draw semi-transparently.
   #--------------------------------------------------------------------------
-  def draw_small_icon(icon_index, x, y, enabled = true)
+  def draw_icon_with_size(icon_index, x, y, size=12, enabled = true)
     bitmap = Cache.system("Iconset")
     rect = Rect.new(icon_index % 16 * 24, icon_index / 16 * 24, 24, 24)
-    target = Rect.new(x, y, 12, 12)
+    target = Rect.new(x, y, size, size)
     contents.stretch_blt(target, bitmap, rect)
   end
   #--------------------------------------------------------------------------
@@ -482,9 +482,9 @@ class Window_Base < Window
     max_icons_per_row = width / 12
     icons = (actor.state_icons + actor.buff_icons)
     if icons.length < max_icons_per_row
-      icons.each_with_index {|n, i| draw_small_icon(n, x + 12 * i, y) }
+      icons.each_with_index {|n, i| draw_icon_with_size(n, x + 12 * i, y) }
     else
-      icons.each_with_index {|n, i| draw_small_icon(n, x + (width / icons.length) * i, y) }
+      icons.each_with_index {|n, i| draw_icon_with_size(n, x + (width / icons.length) * i, y) }
     end
   end
   #--------------------------------------------------------------------------
@@ -512,8 +512,8 @@ class Window_Base < Window
   def draw_actor_hp(actor, x, y, width = 124)
     draw_gauge(x, y, width, actor.hp_rate, hp_gauge_color1, hp_gauge_color2)
     change_color(system_color)
-    draw_text(x, y, 30, line_height, Vocab::hp_a)
-    draw_current_and_max_values(x, y, width, actor.hp, actor.mhp,
+    draw_text(x, y + 3, 30, line_height, Vocab::hp_a)
+    draw_current_and_max_values(x, y + 3, width, actor.hp, actor.mhp,
       hp_color(actor), normal_color)
   end
   #--------------------------------------------------------------------------
@@ -522,8 +522,8 @@ class Window_Base < Window
   def draw_actor_mp(actor, x, y, width = 124)
     draw_gauge(x, y, width, actor.mp_rate, mp_gauge_color1, mp_gauge_color2)
     change_color(system_color)
-    draw_text(x, y, 30, line_height, Vocab::mp_a)
-    draw_current_and_max_values(x, y, width, actor.mp, actor.mmp,
+    draw_text(x, y + 3, 30, line_height, Vocab::mp_a)
+    draw_current_and_max_values(x, y + 3, width, actor.mp, actor.mmp,
       mp_color(actor), normal_color)
   end
   #--------------------------------------------------------------------------
@@ -532,7 +532,7 @@ class Window_Base < Window
   def draw_actor_tp(actor, x, y, width = 124)
     draw_gauge(x, y, width, actor.tp_rate, tp_gauge_color1, tp_gauge_color2)
     change_color(system_color)
-    draw_text(x, y, 30, line_height, Vocab::tp_a)
+    draw_text(x, y, 24, line_height, Vocab::tp_a)
     change_color(tp_color(actor))
     draw_text(x + width - 42, y, 42, line_height, actor.tp.to_i, 2)
   end

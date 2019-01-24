@@ -87,42 +87,84 @@ class Window_BattleStatus < Window_Selectable
   #--------------------------------------------------------------------------
   def draw_basic_area(rect, actor)
     prev_face_index = actor.face_index
-    if actor.hp == 0
+    if actor.is_dead?
       actor.set_face_index(actor.face_index - 1)
-    elsif actor.hp < actor.mhp / 4
+    elsif actor.is_critical?
       actor.set_face_index(actor.face_index - 1)
     else
       actor.set_face_index(actor.face_index)
     end
-    draw_actor_face(actor, rect.x + (rect.width / 2 - 96 / 2), rect.y + 2)
-    draw_actor_name(actor, rect.x + 4, rect.y + 2, 100)
+    draw_actor_face(actor, rect.x + 2, rect.y + 2)
+    # draw_actor_name(actor, rect.x + 4, rect.y + 2, 100)
     actor.set_face_index(prev_face_index)
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area
   #--------------------------------------------------------------------------
   def draw_gauge_area(rect, actor)
+    contents.font.size = 18
     if $data_system.opt_display_tp
       draw_gauge_area_with_tp(rect, actor)
     else
       draw_gauge_area_without_tp(rect, actor)
     end
     draw_actor_icons(actor, rect.x, rect.y + 48, rect.width)
+    draw_emotions_values(rect, actor)
+    reset_font_settings
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area (with TP)
   #--------------------------------------------------------------------------
   def draw_gauge_area_with_tp(rect, actor)
     draw_actor_hp(actor, rect.x, rect.y, rect.width)
-    draw_actor_mp(actor, rect.x, rect.y + 24, rect.width)
-    draw_actor_tp(actor, rect.x, rect.y + 48, rect.width)
+    draw_actor_mp(actor, rect.x, rect.y + 16, rect.width)
+    draw_actor_tp(actor, rect.x, rect.y + 32, rect.width)
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area (without TP)
   #--------------------------------------------------------------------------
   def draw_gauge_area_without_tp(rect, actor)
     draw_actor_hp(actor, rect.x, rect.y, rect.width)
-    draw_actor_mp(actor, rect.x, rect.y + 20, rect.width)
+    draw_actor_mp(actor, rect.x, rect.y + 16, rect.width)
+  end
+  #--------------------------------------------------------------------------
+  # * Actor Emotion Values
+  #--------------------------------------------------------------------------
+  def draw_emotions_values(rect, actor)
+    contents.font.size = 18
+    contents.font.color = Color.new(46, 204, 64)
+    if actor.happiness > 0
+      draw_icon_with_size(528, rect.x, rect.y + 42, 18)
+    else
+      draw_icon_with_size(528 + 3, rect.x, rect.y + 42, 18)
+    end
+    if actor.courage > 0
+      draw_icon_with_size(529, rect.x + rect.width / 3, rect.y + 42, 18)
+    else
+      draw_icon_with_size(529 + 3, rect.x + rect.width / 3, rect.y + 42, 18)
+    end
+    if actor.confidence > 0
+      draw_icon_with_size(530, rect.x + rect.width / 3 * 2, rect.y + 42, 18)
+    else
+      draw_icon_with_size(530 + 3, rect.x + rect.width / 3 * 2, rect.y + 42, 18)
+    end
+    draw_emotion_number_value(rect.x + 20, rect.y + 3, actor.happiness)
+    draw_emotion_number_value(rect.x + rect.width / 3 + 20, rect.y + 3, actor.courage)
+    draw_emotion_number_value(rect.x + rect.width / 3 * 2 + 20, rect.y + 3, actor.confidence)
+  end
+  #--------------------------------------------------------------------------
+  # * Actor Emotion Number Values
+  #--------------------------------------------------------------------------
+  def draw_emotion_number_value(x, y, value)
+    # Draw the text values
+    if value == 0
+      contents.font.color = Color.new(170, 170, 170)
+    elsif value > 0
+      contents.font.color = Color.new(46, 204, 64)
+    else
+      contents.font.color = Color.new(255, 65, 54)
+    end
+    draw_text(x, y, 100, 100, value.abs)
   end
   #--------------------------------------------------------------------------
   # * Update Cursor

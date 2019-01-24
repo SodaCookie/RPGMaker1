@@ -18,6 +18,6 @@ class Game_Actors
   #--------------------------------------------------------------------------
   def [](actor_id)
     return nil unless $data_actors[actor_id]
-    @data[actor_id] ||= Game_Actor.new(actor_id)
+    @data[actor_id] ||= Game_EmotionActor.new(actor_id)
   end
 end

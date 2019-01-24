@@ -5,4 +5,5 @@ Sprites/
 Windows/
 Scenes/
 Materials/
+Plugin/
 Main Process/
