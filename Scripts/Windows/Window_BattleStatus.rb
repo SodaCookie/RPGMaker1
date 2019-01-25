@@ -108,7 +108,7 @@ class Window_BattleStatus < Window_Selectable
     else
       draw_gauge_area_without_tp(rect, actor)
     end
-    draw_actor_icons(actor, rect.x, rect.y + 48, rect.width)
+    draw_actor_icons(actor, rect.x, rect.y - 82, rect.width)
     draw_emotions_values(rect, actor)
     reset_font_settings
   end

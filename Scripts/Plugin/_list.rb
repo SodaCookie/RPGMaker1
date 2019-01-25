@@ -1,1 +1,2 @@
 Game_EmotionActor
+Window_DamageValues

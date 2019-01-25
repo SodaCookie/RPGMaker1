@@ -16,6 +16,7 @@ class Window_BattleLog < Window_Selectable
     self.opacity = 0
     @lines = []
     @num_wait = 0
+    @display_remark = false
     create_back_bitmap
     create_back_sprite
     refresh
@@ -165,6 +166,13 @@ class Window_BattleLog < Window_Selectable
     draw_text_ex(rect.x, rect.y, @lines[line_number])
   end
   #--------------------------------------------------------------------------
+  # * Draw Line Offset
+  #--------------------------------------------------------------------------
+  def draw_line_offset(line_number, x, y)
+    rect = item_rect_for_text(line_number)
+    draw_text_ex(rect.x + x, rect.y + y, @lines[line_number])
+  end
+  #--------------------------------------------------------------------------
   # * Set Wait Method
   #--------------------------------------------------------------------------
   def method_wait=(method)
@@ -204,8 +212,23 @@ class Window_BattleLog < Window_Selectable
     clear
   end
   #--------------------------------------------------------------------------
-  # * Display Current State
+  # * Display Actor Remark
   #--------------------------------------------------------------------------
+  def display_actor_remark(subject, text, face_index)
+    contents.clear
+    @back_bitmap.clear
+    @back_bitmap.fill_rect(0, padding, width, 96, back_color)
+    rect = back_rect
+    prev_face_index = subject.face_index
+    # subject.set_face_index(index)
+    draw_actor_face(subject, 0, 0)
+    subject.set_face_index(prev_face_index)
+    @lines.size.times {|i| draw_line_offset(i, 100, 0) }
+    wait
+  end
+  #--------------------------------------------------------------------------
+  # * Display Current State
+  #------------------------------------------------------ --------------------
   def display_current_state(subject)
     unless subject.most_important_state_text.empty?
       add_text(subject.name + subject.most_important_state_text)
@@ -229,6 +252,9 @@ class Window_BattleLog < Window_Selectable
       end
     else
       add_text(sprintf(Vocab::UseItem, subject.name, item.name))
+    end
+    if subject.actor?
+      display_actor_remark(subject, "111", 1)
     end
   end
   #--------------------------------------------------------------------------
