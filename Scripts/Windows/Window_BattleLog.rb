@@ -19,7 +19,15 @@ class Window_BattleLog < Window_Selectable
     @display_remark = false
     create_back_bitmap
     create_back_sprite
+    create_value_sprite
     refresh
+  end
+  #--------------------------------------------------------------------------
+  # * Update
+  #--------------------------------------------------------------------------
+  def update
+    super
+    @value_sprite.update
   end
   #--------------------------------------------------------------------------
   # * Free
@@ -28,6 +36,7 @@ class Window_BattleLog < Window_Selectable
     super
     dispose_back_bitmap
     dispose_back_sprite
+    dispose_value_sprite
   end
   #--------------------------------------------------------------------------
   # * Get Window Width
@@ -46,6 +55,12 @@ class Window_BattleLog < Window_Selectable
   #--------------------------------------------------------------------------
   def max_line_number
     return 6
+  end
+  #--------------------------------------------------------------------------
+  # * Create Value Bitmap
+  #--------------------------------------------------------------------------
+  def create_value_sprite
+    @value_sprite = Sprite_DamageValues.new
   end
   #--------------------------------------------------------------------------
   # * Create Background Bitmap
@@ -73,6 +88,12 @@ class Window_BattleLog < Window_Selectable
   #--------------------------------------------------------------------------
   def dispose_back_sprite
     @back_sprite.dispose
+  end
+  #--------------------------------------------------------------------------
+  # * Free Background Sprite
+  #--------------------------------------------------------------------------
+  def dispose_value_sprite
+    @value_sprite.dispose
   end
   #--------------------------------------------------------------------------
   # * Clear
@@ -364,6 +385,15 @@ class Window_BattleLog < Window_Selectable
     return if target.result.hp_damage == 0 && item && !item.damage.to_hp?
     if target.result.hp_damage > 0 && target.result.hp_drain == 0
       target.perform_damage_effect
+      if target.enemy?
+        bitmap = Cache.battler(target.battler_name, target.battler_hue)
+        @value_sprite.add_damage_text(
+          (target.screen_x / 544.0) * Graphics.width,
+          (target.screen_y / 480.0) * Graphics.height - bitmap.height,
+          target.result.hp_damage,
+          0
+        )
+      end
     end
     Sound.play_recovery if target.result.hp_damage < 0
     add_text(target.result.hp_damage_text)
