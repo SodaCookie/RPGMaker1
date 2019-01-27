@@ -213,6 +213,13 @@ class Window_BattleLog < Window_Selectable
     @method_wait.call(message_speed) if @method_wait
   end
   #--------------------------------------------------------------------------
+  # * Wait
+  #--------------------------------------------------------------------------
+  def wait_amount(duration)
+    @num_wait += 1
+    @method_wait.call(duration) if @method_wait
+  end
+  #--------------------------------------------------------------------------
   # * Wait Until Effect Execution Ends
   #--------------------------------------------------------------------------
   def wait_for_effect
@@ -222,7 +229,7 @@ class Window_BattleLog < Window_Selectable
   # * Get Message Speed
   #--------------------------------------------------------------------------
   def message_speed
-    return 20
+    return 10
   end
   #--------------------------------------------------------------------------
   # * Wait and Clear
@@ -383,20 +390,33 @@ class Window_BattleLog < Window_Selectable
   #--------------------------------------------------------------------------
   def display_hp_damage(target, item)
     return if target.result.hp_damage == 0 && item && !item.damage.to_hp?
+    if target.enemy?
+      bitmap = Cache.battler(target.battler_name, target.battler_hue)
+      x = (target.screen_x / 544.0) * Graphics.width
+      y = (target.screen_y / 480.0) * Graphics.height - bitmap.height / 3 * 2
+    else
+      # This is a player and we need to figure out which index
+      for member, i in $game_party.members.each_with_index
+        break if target.equal?(member)
+      end
+      # Hard coded here because connections
+      x = (Graphics.width - 128) / 4 * i + 128
+      y = Graphics.height - fitting_height(6) + 48
+    end
     if target.result.hp_damage > 0 && target.result.hp_drain == 0
       target.perform_damage_effect
-      if target.enemy?
-        bitmap = Cache.battler(target.battler_name, target.battler_hue)
-        @value_sprite.add_damage_text(
-          (target.screen_x / 544.0) * Graphics.width,
-          (target.screen_y / 480.0) * Graphics.height - bitmap.height,
-          target.result.hp_damage,
-          0
-        )
+      if target.result.critical
+        $game_troop.screen.start_shake(5, 5, 20)
+        @value_sprite.add_critical_text(x, y, target.result.hp_damage, 0)
+      else
+        @value_sprite.add_damage_text(x, y, target.result.hp_damage, 0)
       end
+    elsif target.result.hp_damage == 0
+      Audio.se_play("Audio/SE/Hammer.ogg", 50, 100)
+      @value_sprite.add_status_text(x, y, "NO DAMAGE", 0)
     end
     Sound.play_recovery if target.result.hp_damage < 0
-    add_text(target.result.hp_damage_text)
+    # add_text(target.result.hp_damage_text)
     wait
   end
   #--------------------------------------------------------------------------
