@@ -38,6 +38,7 @@ module BattleManager
   def self.on_encounter
     @preemptive = (rand < rate_preemptive)
     @surprise = (rand < rate_surprise && !@preemptive)
+    $game_party.battle_members.each {|actor| actor.on_battle_start}
   end
   #--------------------------------------------------------------------------
   # * Get Probability of Preemptive Attack
@@ -203,6 +204,7 @@ module BattleManager
   def self.process_victory
     play_battle_end_me
     replay_bgm_and_bgs
+    $game_party.battle_members.each {|actor| actor.on_victory}
     $game_message.add(sprintf(Vocab::Victory, $game_party.name))
     display_exp
     gain_gold
@@ -216,6 +218,7 @@ module BattleManager
   # * Escape Processing
   #--------------------------------------------------------------------------
   def self.process_escape
+    $game_party.battle_members.each {|actor| actor.on_escape}
     $game_message.add(sprintf(Vocab::EscapeStart, $game_party.name))
     success = @preemptive ? true : (rand < @escape_ratio)
     Sound.play_escape

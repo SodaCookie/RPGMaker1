@@ -337,7 +337,7 @@ class Scene_Battle < Scene_Base
   #--------------------------------------------------------------------------
   def command_attack
     BattleManager.actor.input.set_attack
-    class_attr =  Variables::ClassAttributes[BattleManager.actor.class_id]
+    class_attr =  Variables::ClassSkills[BattleManager.actor.class_id]
     if !$data_skills[class_attr.main_id].need_selection?
       @skill_window.hide
       next_command
@@ -361,7 +361,7 @@ class Scene_Battle < Scene_Base
   #--------------------------------------------------------------------------
   def command_guard
     BattleManager.actor.input.set_guard
-    class_attr =  Variables::ClassAttributes[BattleManager.actor.class_id]
+    class_attr =  Variables::ClassSkills[BattleManager.actor.class_id]
     if !$data_skills[class_attr.second_id].need_selection?
       @skill_window.hide
       next_command

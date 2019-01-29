@@ -3,7 +3,7 @@ Game_System
 Game_Timer
 Game_Message
 Game_Switches
-Game_ClassAttribute
+Game_ClassSkills
 Game_Variables
 Game_SelfSwitches
 Game_Screen

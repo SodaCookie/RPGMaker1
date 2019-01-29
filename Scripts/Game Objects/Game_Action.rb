@@ -59,7 +59,7 @@ class Game_Action
   #--------------------------------------------------------------------------
   def set_attack
     if subject.actor?
-      set_skill(Variables::ClassAttributes[subject.class_id].main_id)
+      set_skill(Variables::ClassSkills[subject.class_id].main_id)
     else
       set_skill(subject.attack_skill_id)
     end
@@ -70,7 +70,7 @@ class Game_Action
   #--------------------------------------------------------------------------
   def set_guard
     if subject.actor?
-      set_skill(Variables::ClassAttributes[subject.class_id].second_id)
+      set_skill(Variables::ClassSkills[subject.class_id].second_id)
     else
       set_skill(subject.guard_skill_id)
     end

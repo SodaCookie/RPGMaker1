@@ -1,4 +1,4 @@
-class Game_ClassAttribute
+class Game_ClassSkills
 
   attr_reader :main_id
   attr_reader :second_id

@@ -405,10 +405,19 @@ class Game_Battler < Game_BattlerBase
   #--------------------------------------------------------------------------
   def execute_damage(user)
     on_damage(@result.hp_damage) if @result.hp_damage > 0
+    if @result.hp_damage <= 0 && user.actor?
+      user.on_no_damage
+    end
+    if @result.hp_damage > 0 && user.actor? && @result.critical
+      user.on_critical_hit
+    end
     self.hp -= @result.hp_damage
     self.mp -= @result.mp_damage
     user.hp += @result.hp_drain
     user.mp += @result.mp_drain
+    if self.hp <= 0 && user.actor?
+      user.on_killing_blow
+    end
   end
   #--------------------------------------------------------------------------
   # * Use Skill/Item
@@ -512,6 +521,8 @@ class Game_Battler < Game_BattlerBase
       end
       item.effects.each {|effect| item_effect_apply(user, item, effect) }
       item_user_effect(user, item)
+    elsif !@result.hit && user.actor?
+      user.on_miss
     end
   end
   #--------------------------------------------------------------------------

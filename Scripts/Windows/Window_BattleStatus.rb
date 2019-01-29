@@ -27,6 +27,7 @@ class Window_BattleStatus < Window_Selectable
   def window_height
     fitting_height(visible_line_number)
   end
+
   #--------------------------------------------------------------------------
   # * Get Number of Lines to Show
   #--------------------------------------------------------------------------
@@ -59,10 +60,10 @@ class Window_BattleStatus < Window_Selectable
   #--------------------------------------------------------------------------
   def basic_area_rect(index)
     rect = Rect.new
-    rect.x = window_width / 4 * index
+    rect.x = contents_width / 4 * index
     rect.y = 0
-    rect.width = window_width / 4
-    rect.height = window_height
+    rect.width = contents_width / 4
+    rect.height = contents_height
     rect
   end
   #--------------------------------------------------------------------------
@@ -88,15 +89,15 @@ class Window_BattleStatus < Window_Selectable
   def draw_basic_area(rect, actor)
     prev_face_index = actor.face_index
     if actor.is_dead?
-      actor.set_face_index(actor.face_index - 1)
-    elsif actor.is_critical?
-      actor.set_face_index(actor.face_index - 1)
+      actor.set_face_sad
+    elsif actor.is_upset?
+      actor.set_face_sad
     else
-      actor.set_face_index(actor.face_index)
+      actor.set_face_neutral
     end
     draw_actor_face(actor, rect.x + 2, rect.y + 2)
     # draw_actor_name(actor, rect.x + 4, rect.y + 2, 100)
-    actor.set_face_index(prev_face_index)
+    actor.set_face_neutral
   end
   #--------------------------------------------------------------------------
   # * Draw Gauge Area
